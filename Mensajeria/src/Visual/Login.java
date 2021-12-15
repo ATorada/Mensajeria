@@ -13,6 +13,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
+
+import Controlador.Controlador;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -26,6 +29,7 @@ public class Login extends JFrame {
 	private JPasswordField passwordField;
 	private JLabel lblNewLabel_2;
 	private JTextField textField_1;
+	private Controlador controlador = new Controlador();
 	/**
 	 * Launch the application.
 	 */
@@ -72,6 +76,11 @@ public class Login extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		JButton btnNewButton = new JButton("Iniciar Sesi\u00F3n");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(controlador.loginUsuario(textField_1.getText(), passwordField.getText()));
+			}
+		});
 		btnNewButton.setBackground(new Color(230, 230, 250));
 		btnNewButton.setBounds(89, 205, 121, 28);
 		contentPane.add(btnNewButton);

@@ -5,12 +5,17 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+
+import Controlador.Controlador;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Register extends JFrame {
 
@@ -77,6 +82,17 @@ public class Register extends JFrame {
 		contentPane.add(lblNewLabel);
 		
 		JButton btnNewButton_1 = new JButton("Registrarse");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controlador controlador = new Controlador();
+				if(passwordField.getText().equals(passwordField_2.getText())) {
+					controlador.registrarUsuario(textField_1.getText(), passwordField.getText());
+				} else {
+					System.out.println("Las contraseñas no son iguales");
+				}
+				
+			}
+		});
 		btnNewButton_1.setBackground(new Color(230, 230, 250));
 		btnNewButton_1.setBounds(165, 311, 107, 28);
 		contentPane.add(btnNewButton_1);
