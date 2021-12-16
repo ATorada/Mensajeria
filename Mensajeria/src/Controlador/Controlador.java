@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import Modelo.ConexionBBDD;
 
@@ -47,19 +49,22 @@ public class Controlador {
     	Connection cnConnection = c.conexion();
         
         try {
-        	Statement stmt = cnConnection.createStatement();
-        	String stringLogin = "SELECT count(*) FROM usuario WHERE usuario = ? AND contra = ?;";
-        	stringLogin = stringLogin.replaceFirst("\\?", Usuario);
-        	try {
-				stringLogin = stringLogin.replaceFirst("\\?", cifrarContra(Contra));
-			} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	ResultSet rs = stmt.executeQuery(stringLogin);
+        	//Statement stmt = cnConnection.createStatement();
+        	PreparedStatement psLogin = cnConnection.prepareStatement("SELECT count(*) FROM usuario WHERE usuario = ? AND contra = ?;");
+        	psLogin.setString(1, Usuario);
+        	psLogin.setString(2,  cifrarContra(Contra));
+        	ResultSet rs = psLogin.executeQuery();
+        	rs.next();
+        	boolean resultado = rs.getInt(1) == 1;
         	cnConnection.close();
-        	return rs.getInt(1) == 1;
+        	return resultado;
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -68,15 +73,15 @@ public class Controlador {
     
     private String cifrarContra(String contra) throws NoSuchAlgorithmException, NoSuchProviderException {
     	
-    	SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
+    	//SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
     	
-        byte[] salt = new byte[16];
+        //byte[] salt = new byte[16];
 
-        sr.nextBytes(salt);
+        //sr.nextBytes(salt);
         
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         
-        md.update(salt.toString().getBytes());
+        md.update(contra.getBytes());
         
         byte[] bytes = md.digest(contra.getBytes());
 
@@ -92,5 +97,31 @@ public class Controlador {
         return sb.toString();
         
     }
+
+	public ArrayList<String> ObtenerAmigos(String Usuario) {
+    	Connection cnConnection = c.conexion();
+        
+        try {
+
+        	PreparedStatement psLogin = cnConnection.prepareStatement("SELECT usuario1 as Nombre FROM amigo WHERE usuario2 = ? UNION SELECT usuario2 FROM amigo WHERE usuario1 = ?;");
+        	psLogin.setString(1, Usuario);
+        	psLogin.setString(2, Usuario);
+        	ResultSet rs = psLogin.executeQuery();
+        	
+        	ArrayList<String> Amigos = new ArrayList<String>();
+        	
+        	while (rs.next()) {
+				Amigos.add(rs.getString("Nombre"));
+			}
+
+        	cnConnection.close();
+        	return Amigos;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+        
+	}
     
 }

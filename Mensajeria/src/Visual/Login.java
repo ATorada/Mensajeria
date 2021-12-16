@@ -78,7 +78,11 @@ public class Login extends JFrame {
 		JButton btnNewButton = new JButton("Iniciar Sesi\u00F3n");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(controlador.loginUsuario(textField_1.getText(), passwordField.getText()));
+				if(controlador.loginUsuario(textField_1.getText(), passwordField.getText())) {
+					PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(textField_1.getText());
+					pantallaPrincipal.setLocationRelativeTo(null);
+					pantallaPrincipal.setVisible(true);
+				}
 			}
 		});
 		btnNewButton.setBackground(new Color(230, 230, 250));
