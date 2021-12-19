@@ -94,6 +94,7 @@ public class Login extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Register register = new Register();
 				register.setLocationRelativeTo(null);
+				register.setModal(true);
 				register.setVisible(true);
 			}
 		});

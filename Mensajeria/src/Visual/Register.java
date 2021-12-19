@@ -14,10 +14,12 @@ import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Register extends JFrame {
+public class Register extends JDialog {
 
 	/**
 	 * 
@@ -41,7 +43,7 @@ public class Register extends JFrame {
 			public void run() {
 				try {
 					Register frame = new Register();
-					frame.setLocationRelativeTo(null);
+					frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,7 +57,6 @@ public class Register extends JFrame {
 	 */
 	public Register() {
 		setTitle("Registro");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 451, 424);
 		contentPane = new JPanel();
 		contentPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
