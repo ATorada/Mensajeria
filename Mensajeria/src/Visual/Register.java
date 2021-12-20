@@ -9,6 +9,7 @@ import javax.swing.border.TitledBorder;
 import Controlador.Controlador;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
@@ -17,44 +18,18 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class Register extends JDialog {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPasswordField passwordField_2;
 	private JTextField textField_1;
 	private JPasswordField passwordField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Register frame = new Register();
-					frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public Register() {
 		setTitle("Registro");
 		setBounds(100, 100, 451, 424);
@@ -63,6 +38,45 @@ public class Register extends JDialog {
 		contentPane.setBackground(new Color(230, 230, 250));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JPanel panelUsuario = new JPanel();
+		panelUsuario.setLayout(null);
+		panelUsuario.setBackground(new Color(204, 204, 255));
+		panelUsuario.setBounds(157, 110, 121, 28);
+		contentPane.add(panelUsuario);
+		
+		textField_1 = new JTextField();
+		textField_1.setText("");
+		textField_1.setColumns(10);
+		textField_1.setBounds(0, 0, 121, 28);
+		panelUsuario.add(textField_1);
+		
+		JPanel panelRepContra = new JPanel();
+		panelRepContra.setLayout(null);
+		panelRepContra.setBackground(new Color(204, 204, 255));
+		panelRepContra.setBounds(157, 263, 121, 28);
+		contentPane.add(panelRepContra);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(0, 0, 121, 28);
+		panelRepContra.add(passwordField);
+		
+		JPanel panelContra = new JPanel();
+		panelContra.setLayout(null);
+		panelContra.setBackground(new Color(204, 204, 255));
+		panelContra.setBounds(157, 183, 121, 28);
+		contentPane.add(panelContra);
+		
+		passwordField_2 = new JPasswordField();
+		passwordField_2.setBounds(0, 0, 121, 28);
+		panelContra.add(passwordField_2);
+		
+		JLabel lblError = new JLabel("");
+		lblError.setHorizontalAlignment(SwingConstants.CENTER);
+		lblError.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblError.setForeground(new Color(255, 0, 0));
+		lblError.setBounds(116, 305, 212, 16);
+		contentPane.add(lblError);
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setBounds(116, 32, 29, 39);
@@ -87,15 +101,27 @@ public class Register extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				Controlador controlador = new Controlador();
 				if(passwordField.getText().equals(passwordField_2.getText())) {
-					controlador.registrarUsuario(textField_1.getText(), passwordField.getText());
+					try {
+						controlador.registrarUsuario(textField_1.getText(), passwordField.getText());
+						JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente.");
+						dispose();
+					} catch (SQLException e1) {
+						lblError.setText("Hay un usuario con ese nombre.");
+						panelUsuario.setBackground(Color.RED);
+						panelContra.setBackground(new Color(204, 204, 255));
+						panelRepContra.setBackground(new Color(204, 204, 255));
+					}
 				} else {
-					System.out.println("Las contraseñas no son iguales");
+					lblError.setText("Las contraseñas no son iguales");
+					panelUsuario.setBackground(new Color(204, 204, 255));
+					panelContra.setBackground(Color.RED);
+					panelRepContra.setBackground(Color.RED);
 				}
 				
 			}
 		});
 		btnNewButton_1.setBackground(new Color(230, 230, 250));
-		btnNewButton_1.setBounds(165, 311, 107, 28);
+		btnNewButton_1.setBounds(165, 330, 107, 28);
 		contentPane.add(btnNewButton_1);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Repetir Contrase\u00F1a", SwingConstants.CENTER);
@@ -107,38 +133,6 @@ public class Register extends JDialog {
 		lblNewLabel_3.setFont(new Font("Segoe UI Semilight", Font.BOLD, 24));
 		lblNewLabel_3.setBounds(160, 21, 120, 39);
 		contentPane.add(lblNewLabel_3);
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.setBackground(new Color(204, 204, 255));
-		panel.setBounds(157, 183, 121, 28);
-		contentPane.add(panel);
-		
-		passwordField_2 = new JPasswordField();
-		passwordField_2.setBounds(0, 0, 121, 28);
-		panel.add(passwordField_2);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBackground(new Color(204, 204, 255));
-		panel_1.setBounds(157, 110, 121, 28);
-		contentPane.add(panel_1);
-		
-		textField_1 = new JTextField();
-		textField_1.setText("");
-		textField_1.setColumns(10);
-		textField_1.setBounds(0, 0, 121, 28);
-		panel_1.add(textField_1);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setLayout(null);
-		panel_2.setBackground(new Color(204, 204, 255));
-		panel_2.setBounds(157, 263, 121, 28);
-		contentPane.add(panel_2);
-		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(0, 0, 121, 28);
-		panel_2.add(passwordField);
 		
 	}
 }

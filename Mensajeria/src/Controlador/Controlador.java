@@ -23,24 +23,20 @@ public class Controlador {
         
     }
     
-    public void registrarUsuario(String Usuario, String Contra) {
+    public void registrarUsuario(String Usuario, String Contra) throws SQLException {
     	Connection cnConnection = c.conexion();
         
-        try {
+       
         	PreparedStatement psRegistro = cnConnection.prepareStatement("INSERT INTO public.usuario(usuario, contra) VALUES (?, ?);");
         	psRegistro.setString(1, Usuario);
         	try {
 				psRegistro.setString(2, cifrarContra(Contra));
 			} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         	psRegistro.executeUpdate();
 			cnConnection.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
         
     }
     
@@ -91,8 +87,6 @@ public class Controlador {
             sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16)
                     .substring(1));
         }
-        
-        System.out.println(sb.length());
         
         return sb.toString();
         

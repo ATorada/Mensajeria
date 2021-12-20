@@ -18,6 +18,8 @@ import Controlador.Controlador;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Login extends JFrame {
 
@@ -98,20 +100,20 @@ public class Login extends JFrame {
 				register.setVisible(true);
 			}
 		});
-		btnNewButton_1.setBackground(new Color(230, 230, 250));
+		btnNewButton_1.setBackground(new Color(236, 230, 250));
 		btnNewButton_1.setBounds(235, 205, 101, 28);
 		contentPane.add(btnNewButton_1);
 		
 		lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setBounds(122, 68, 29, 39);
-		ImageIcon iconUser = new ImageIcon("C:/Users/alumno/Desktop/icono.png");
+		ImageIcon iconUser = new ImageIcon(Login.class.getResource("/img/icono.png"));
 		iconUser.getImage().flush();
 		lblNewLabel_2.setIcon(iconUser);
 		contentPane.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("");
 		lblNewLabel_2_1.setBounds(122, 142, 29, 39);
-		ImageIcon iconContra = new ImageIcon("C:/Users/alumno/Desktop/contra.png");
+		ImageIcon iconContra = new ImageIcon(Login.class.getResource("/img/contra.png"));
 		iconContra.getImage().flush();
 		lblNewLabel_2_1.setIcon(iconContra);
 		contentPane.add(lblNewLabel_2_1);
@@ -123,6 +125,15 @@ public class Login extends JFrame {
 		panel.setLayout(null);
 		
 		passwordField = new JPasswordField();
+		passwordField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(controlador.loginUsuario(textField_1.getText(), passwordField.getText())) {
+					PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(textField_1.getText());
+					pantallaPrincipal.setLocationRelativeTo(null);
+					pantallaPrincipal.setVisible(true);
+				}
+			}
+		});
 		passwordField.setBounds(0, 0, 121, 28);
 		panel.add(passwordField);
 		
