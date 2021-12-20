@@ -9,6 +9,7 @@ import java.util.Iterator;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import Controlador.Controlador;
@@ -72,16 +73,16 @@ public class PantallaPrincipal extends JFrame {
 		panel_1.add(lblNewLabel);
 	
 		
-		ArrayList amigos = controlador.ObtenerAmigos(Usuario);
+		ArrayList<String> amigos = controlador.ObtenerAmigos(Usuario);
 		amigosPanel = new JPanel[amigos.size()]; 
 		
 		int altura = 54;
 		for (int i = 0; i < amigos.size(); i++) {
 			System.out.println(amigos.get(i));
 			amigosPanel[i] = new JPanel();
+			amigosPanel[i].setBackground(Color.WHITE);
 			amigosPanel[i].setBounds(71, altura, 164, 33);
-			amigosPanel[i].setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
-			amigosPanel[i].setBackground(new Color(230, 230, 250));
+			amigosPanel[i].setBorder(new LineBorder(new Color(204, 204, 255), 2));
 			panel_1.add(amigosPanel[i]);
 			amigosPanel[i].setLayout(null);
 			JLabel lblNewLabel_1 = new JLabel("");
