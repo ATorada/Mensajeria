@@ -19,6 +19,7 @@ import Controlador.Controlador;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.Icon;
@@ -37,8 +38,13 @@ public class PantallaPrincipal extends JFrame {
 	private JPanel panelAmigos;
 	private JLabel lblConverGrupo;
 	private JTextField textMensaje;
-
+	private JLabel lblCerrar;
+	private JPanel panel;
+	private JLabel lblAñadirAmigo;
+	private JPanel panelVacio;
+	
 	public PantallaPrincipal(String Usuario) {
+		setResizable(false);
 		this.Usuario = Usuario;
 
 		controlador = new Controlador();
@@ -51,7 +57,7 @@ public class PantallaPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panel.setBackground(new Color(236, 230, 250));
 		panel.setBounds(377, 58, 291, 391);
@@ -70,7 +76,7 @@ public class PantallaPrincipal extends JFrame {
 		panel_1.add(textMensaje);
 		textMensaje.setColumns(10);
 		
-		JPanel panelVacio = new JPanel();
+		panelVacio = new JPanel();
 		panelVacio.setVisible(true);
 		panelVacio.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panelVacio.setBackground(new Color(236, 230, 250));
@@ -95,6 +101,30 @@ public class PantallaPrincipal extends JFrame {
 		lblAmigosGrupos.setBounds(127, 20, 59, 21);
 		panelVacio.add(lblAmigosGrupos);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(279, 213, 2, 2);
+		panelVacio.add(scrollPane);
+		
+		lblAñadirAmigo = new JLabel("");
+		lblAñadirAmigo.setBounds(175, 11, 46, 38);
+		lblAñadirAmigo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					String amigo = JOptionPane.showInputDialog("Introduzca el usuario a añadir");
+					controlador.añadirAmigo(Usuario,amigo);
+					cargarAmigos();	
+					panelAmigos.setVisible(false);
+					panelVacio.setVisible(true);
+					panelVacio.setVisible(false);
+					panelAmigos.setVisible(true);
+				} catch (Exception exc) {
+					
+				}
+			}
+		});
+		panelAmigos.add(lblAñadirAmigo);
+		
 		
 		ImageIcon iconGroup = new ImageIcon(Login.class.getResource("/img/grupo.png"));
 		iconGroup.getImage().flush();
@@ -112,6 +142,7 @@ public class PantallaPrincipal extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				lblAmigosGrupos.setText("Grupos");
+				lblAñadirAmigo.setIcon(null);
 			}
 		});
 		btnNewButton.setFocusPainted(false);
@@ -124,6 +155,9 @@ public class PantallaPrincipal extends JFrame {
 				panelVacio.setVisible(false);
 				panelAmigos.setVisible(true);
 				panelAmigos.add(lblAmigosGrupos);
+				ImageIcon iconAñadir = new ImageIcon(Login.class.getResource("/img/añadirAmigo.png"));
+				iconAñadir.getImage().flush();
+				lblAñadirAmigo.setIcon(iconAñadir);
 				cargarAmigos();
 			}
 		});
@@ -141,6 +175,11 @@ public class PantallaPrincipal extends JFrame {
 		lblConverGrupo = new JLabel();
 		lblConverGrupo.setBounds(10, 16, 106, 17);
 		panelNombre.add(lblConverGrupo);
+		
+		lblCerrar = new JLabel("");
+		lblCerrar.setBounds(257, 11, 24, 22);
+		lblCerrar.setVisible(false);
+		panelNombre.add(lblCerrar);
 
 		
 	}
@@ -148,7 +187,17 @@ public class PantallaPrincipal extends JFrame {
 	private void cargarAmigos() {
 		
 		ArrayList<String> amigos = controlador.ObtenerAmigos(Usuario);
-		amigosPanel = new JPanel[amigos.size()]; 
+		
+		for (int i = 0; i < amigos.size(); i++) {
+			System.out.println(amigos.get(i).toString());
+		}
+		
+		//amigosPanel = new JPanel[amigos.size()]; 
+		//for (int i = 0; i < amigosPanel.length; i++) {
+			//if (amigosPanel[i] != null) {
+				//amigosPanel[i].removeAll();
+			//}
+		//}
 		
 		int altura = 55;
 		for (int i = 0; i < amigos.size(); i++) {
@@ -176,9 +225,38 @@ public class PantallaPrincipal extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					lblConverGrupo.setText(usuarioString);
 					textMensaje.setEnabled(true);
+					ImageIcon iconCerrar = new ImageIcon(Login.class.getResource("/img/cerrar.png"));
+					iconDM.getImage().flush();
+					lblCerrar.setIcon(iconCerrar);
+					lblCerrar.setVisible(true);
+					lblCerrar.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							textMensaje.setEnabled(false);
+							lblConverGrupo.setText("");
+							lblCerrar.setIcon(null);
+						}
+					});
 				}
 			});
 			amigosPanel[i].add(lblNewLabel_2);
+			JLabel lblNewLabel_3 = new JLabel("");
+			ImageIcon iconBorrar = new ImageIcon(Login.class.getResource("/img/borrar.png"));
+			iconBorrar.getImage().flush();
+			lblNewLabel_3.setIcon(iconBorrar);
+			lblNewLabel_3.setBounds(5, 9, 115, 16);
+			lblNewLabel_3.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					controlador.borrarAmigo(Usuario, usuarioString);
+					cargarAmigos();
+					panelAmigos.setVisible(false);
+					panelVacio.setVisible(true);
+					panelVacio.setVisible(false);
+					panelAmigos.setVisible(true);
+				}
+			});
+			amigosPanel[i].add(lblNewLabel_3);
 			altura += 36;
 		}
 	}

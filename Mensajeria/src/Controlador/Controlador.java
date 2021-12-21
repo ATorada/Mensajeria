@@ -12,6 +12,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.JOptionPane;
+
 import Modelo.ConexionBBDD;
 
 public class Controlador {
@@ -116,6 +118,49 @@ public class Controlador {
 		}
 		return null;
         
+	}
+
+	public void añadirAmigo(String usuario, String amigo) {
+    	Connection cnConnection = c.conexion();
+        
+        try {
+
+        	PreparedStatement psLogin = cnConnection.prepareStatement("SELECT count(*) as Nombre FROM usuario WHERE usuario=?");
+        	psLogin.setString(1, amigo);
+        	ResultSet rs = psLogin.executeQuery();
+        	rs.next();
+        	
+        	int count = rs.getInt(1);
+        	
+        	if (count==1) {
+            	PreparedStatement psAñadir = cnConnection.prepareStatement("INSERT INTO public.amigo(usuario1, usuario2) VALUES (?, ?);");
+            	psAñadir.setString(1, usuario);
+            	psAñadir.setString(2, amigo);
+            	psAñadir.executeUpdate();
+			} 
+        	cnConnection.close();
+		} catch (SQLException e) {	
+			JOptionPane.showMessageDialog(null, "Lo siento, ese amigo ya es tu amigo o no existe");
+		}
+	}
+
+	public void borrarAmigo(String usuario, String amigo) {
+    	Connection cnConnection = c.conexion();
+        
+        try {
+        		
+            	PreparedStatement psBorrar = cnConnection.prepareStatement("DELETE FROM public.amigo WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
+            	psBorrar.setString(1, usuario);
+            	psBorrar.setString(2, amigo);
+            	psBorrar.setString(3, amigo);
+            	psBorrar.setString(4, usuario);
+            	psBorrar.executeUpdate();
+			
+            	cnConnection.close();
+		} catch (SQLException e) {	
+			JOptionPane.showMessageDialog(null, "Lo siento, ese amigo ya es tu amigo o no existe");
+		}
+		
 	}
     
 }
