@@ -270,5 +270,25 @@ public class Controlador {
 		}
 		
 	}
+
+	public void borrarConversacion(String usuario, String amigo) {
+		Connection cnConnection = c.conexion();
+		try {
+    	PreparedStatement psIDConversacion = cnConnection.prepareStatement("SELECT id_conversacion FROM conversacion WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
+		psIDConversacion.setString(1, usuario);
+		psIDConversacion.setString(2, amigo);
+		psIDConversacion.setString(3, amigo);
+		psIDConversacion.setString(4, usuario);
+    	ResultSet rsID = psIDConversacion.executeQuery();
+    	rsID.next();
+    	int IDConver = rsID.getInt(1);
+    	PreparedStatement psBorrarConversación = cnConnection.prepareStatement("SELECT borrarconversacion(?);");
+    	psBorrarConversación.setInt(1, IDConver);
+    	psBorrarConversación.executeQuery();
+		} catch (SQLException e) {	
+			System.out.println(e);
+		}
+		
+	}
     
 }

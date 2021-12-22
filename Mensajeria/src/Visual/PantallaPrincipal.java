@@ -190,6 +190,20 @@ public class PantallaPrincipal extends JFrame {
 		ImageIcon iconBorrarConver = new ImageIcon(Login.class.getResource("/img/borrarConver.png"));
 		iconBorrarConver.getImage().flush();
 		btnBorrarConver = new JButton(iconBorrarConver);
+		btnBorrarConver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controlador.borrarConversacion(Usuario, lblConverGrupo.getText());
+				btnEnviarMensaje.setEnabled(false);
+				btnBorrarConver.setEnabled(false);
+				btnLimpiarChat.setEnabled(false);
+				panel.removeAll();
+				panel.revalidate();
+				panel.repaint();
+				textMensaje.setEnabled(false);
+				lblConverGrupo.setText("");
+				lblCerrar.setIcon(null);
+			}
+		});
 		btnBorrarConver.setEnabled(false);
 		btnBorrarConver.setFocusPainted(false);
 		btnBorrarConver.setBounds(100, 9, 46, 29);
@@ -210,12 +224,14 @@ public class PantallaPrincipal extends JFrame {
 		btnEnviarMensaje.setEnabled(false);
 		btnEnviarMensaje.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controlador.enviarMensajeConver(Usuario,textMensaje.getText(),lblConverGrupo.getText());
-				ArrayList<String> Mensajes = controlador.cargarMensajes(Usuario, lblConverGrupo.getText());
-				panel.removeAll();
-				mostrarMensajes(Mensajes);
-				panel.revalidate();
-				panel.repaint();
+				if (!textMensaje.getText().trim().isEmpty()) {
+					controlador.enviarMensajeConver(Usuario, textMensaje.getText(), lblConverGrupo.getText());
+					ArrayList<String> Mensajes = controlador.cargarMensajes(Usuario, lblConverGrupo.getText());
+					panel.removeAll();
+					mostrarMensajes(Mensajes);
+					panel.revalidate();
+					panel.repaint();
+				}
 			}
 		});
 		btnEnviarMensaje.setBounds(629, 400, 39, 47);
@@ -277,12 +293,14 @@ public class PantallaPrincipal extends JFrame {
 							btnEnviarMensaje.setEnabled(false);
 							btnBorrarConver.setEnabled(false);
 							btnLimpiarChat.setEnabled(false);
+							panel.setPreferredSize(new Dimension(0,  330));
 							panel.removeAll();
 							panel.revalidate();
 							panel.repaint();
 							textMensaje.setEnabled(false);
 							lblConverGrupo.setText("");
 							lblCerrar.setIcon(null);
+							
 						}
 					});
 					if(controlador.existeConversacion(Usuario,usuarioString)) {
@@ -321,7 +339,6 @@ public class PantallaPrincipal extends JFrame {
 					cargarAmigos();
 					panelAmigos.revalidate();
 					panelAmigos.repaint();
-					
 					
 				}
 			});
