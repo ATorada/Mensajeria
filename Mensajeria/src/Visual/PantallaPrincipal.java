@@ -47,6 +47,8 @@ public class PantallaPrincipal extends JFrame {
 	private ArrayList<JPanel> mensajesPanel = new ArrayList<JPanel>();
 	private JLabel lblAmigosGrupos;
 	private JButton btnEnviarMensaje;
+	private JButton btnBorrarConver;
+	private JButton btnLimpiarChat;
 	
 	public PantallaPrincipal(String Usuario) {
 		setResizable(false);
@@ -177,7 +179,7 @@ public class PantallaPrincipal extends JFrame {
 		panelNombre.setLayout(null);
 		
 		lblConverGrupo = new JLabel();
-		lblConverGrupo.setBounds(10, 16, 106, 17);
+		lblConverGrupo.setBounds(10, 16, 89, 17);
 		panelNombre.add(lblConverGrupo);
 		
 		lblCerrar = new JLabel("");
@@ -187,14 +189,16 @@ public class PantallaPrincipal extends JFrame {
 		
 		ImageIcon iconBorrarConver = new ImageIcon(Login.class.getResource("/img/borrarConver.png"));
 		iconBorrarConver.getImage().flush();
-		JButton btnBorrarConver = new JButton(iconBorrarConver);
+		btnBorrarConver = new JButton(iconBorrarConver);
+		btnBorrarConver.setEnabled(false);
 		btnBorrarConver.setFocusPainted(false);
 		btnBorrarConver.setBounds(100, 9, 46, 29);
 		panelNombre.add(btnBorrarConver);
 		
 		ImageIcon iconBorrarMensajes = new ImageIcon(Login.class.getResource("/img/borrarMensajes.png"));
 		iconBorrarMensajes.getImage().flush();
-		JButton btnLimpiarChat = new JButton(iconBorrarMensajes);
+		btnLimpiarChat = new JButton(iconBorrarMensajes);
+		btnLimpiarChat.setEnabled(false);
 		btnLimpiarChat.setFocusPainted(false);
 		btnLimpiarChat.setBounds(160, 9, 46, 29);
 		panelNombre.add(btnLimpiarChat);
@@ -261,6 +265,8 @@ public class PantallaPrincipal extends JFrame {
 					lblConverGrupo.setText(usuarioString);
 					textMensaje.setEnabled(true);
 					btnEnviarMensaje.setEnabled(true);
+					btnBorrarConver.setEnabled(true);
+					btnLimpiarChat.setEnabled(true);
 					ImageIcon iconCerrar = new ImageIcon(Login.class.getResource("/img/cerrar.png"));
 					iconDM.getImage().flush();
 					lblCerrar.setIcon(iconCerrar);
@@ -269,6 +275,8 @@ public class PantallaPrincipal extends JFrame {
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							btnEnviarMensaje.setEnabled(false);
+							btnBorrarConver.setEnabled(false);
+							btnLimpiarChat.setEnabled(false);
 							panel.removeAll();
 							panel.revalidate();
 							panel.repaint();
