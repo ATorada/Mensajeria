@@ -2,6 +2,7 @@ package Visual;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,6 +18,7 @@ import javax.swing.border.TitledBorder;
 import Controlador.Controlador;
 
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,19 +36,22 @@ public class PantallaPrincipal extends JFrame {
 	private JPanel contentPane;
 	private String Usuario;
 	private Controlador controlador;
-	private JPanel [] amigosPanel; 
 	private JPanel panelAmigos;
 	private JLabel lblConverGrupo;
-	private JTextField textMensaje;
+	private JTextArea textMensaje;
 	private JLabel lblCerrar;
 	private JPanel panel;
 	private JLabel lblAñadirAmigo;
 	private JPanel panelVacio;
+	private ArrayList<JPanel> amigosPanel = new ArrayList<JPanel>();
+	private ArrayList<JPanel> mensajesPanel = new ArrayList<JPanel>();
+	private JLabel lblAmigosGrupos;
+	private JButton btnEnviarMensaje;
 	
 	public PantallaPrincipal(String Usuario) {
 		setResizable(false);
 		this.Usuario = Usuario;
-
+		lblAmigosGrupos = new JLabel();
 		controlador = new Controlador();
 		setTitle("Pantalla Principal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,77 +65,74 @@ public class PantallaPrincipal extends JFrame {
 		panel = new JPanel();
 		panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panel.setBackground(new Color(236, 230, 250));
-		panel.setBounds(377, 58, 291, 391);
-		contentPane.add(panel);
+		panel.setBounds(377, 58, 291, 340);
+		
 		panel.setLayout(null);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(3, 341, 286, 47);
+		panel_1.setBounds(377, 400, 250, 47);
 		panel_1.setBackground(new Color(204, 204, 255));
-		panel.add(panel_1);
-		panel_1.setLayout(null);
+		contentPane.add(panel_1);
 		
-		textMensaje = new JTextField();
-		textMensaje.setEnabled(false);
-		textMensaje.setBounds(2, 2, 282, 43);
-		panel_1.add(textMensaje);
-		textMensaje.setColumns(10);
+
+		//panel_1.add(textMensaje);
+		//textMensaje.setColumns(10);
 		
+
 		panelVacio = new JPanel();
 		panelVacio.setVisible(true);
 		panelVacio.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panelVacio.setBackground(new Color(236, 230, 250));
-
 		panelVacio.setBounds(10, 58, 291, 391);
-		
 		contentPane.add(panelVacio);
 		panelVacio.setLayout(null);
 		
+		//Creo el panel de amigos
 		panelAmigos = new JPanel();
 		panelAmigos.setVisible(false);
+		panelAmigos.setBounds(10, 58, 291, 100);
 		panelAmigos.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panelAmigos.setBackground(new Color(236, 230, 250));
-
-		panelAmigos.setBounds(10, 58, 291, 391);
-		
-		contentPane.add(panelAmigos);
+		//Pongo el layout en absoluto
 		panelAmigos.setLayout(null);
-		
-		JLabel lblAmigosGrupos = new JLabel();
-		lblAmigosGrupos.setFont(new Font("Trebuchet MS", Font.BOLD, 13));
-		lblAmigosGrupos.setBounds(127, 20, 59, 21);
-		panelVacio.add(lblAmigosGrupos);
-		
+		//Creo el ScrollPane
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(279, 213, 2, 2);
-		panelVacio.add(scrollPane);
+		scrollPane.setSize(291, 391);
+		scrollPane.setLocation(10, 58);
 		
-		lblAñadirAmigo = new JLabel("");
-		lblAñadirAmigo.setBounds(175, 11, 46, 38);
-		lblAñadirAmigo.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				try {
-					String amigo = JOptionPane.showInputDialog("Introduzca el usuario a añadir");
-					controlador.añadirAmigo(Usuario,amigo);
-					cargarAmigos();	
-					panelAmigos.setVisible(false);
-					panelVacio.setVisible(true);
-					panelVacio.setVisible(false);
-					panelAmigos.setVisible(true);
-				} catch (Exception exc) {
-					
-				}
-			}
-		});
-		panelAmigos.add(lblAñadirAmigo);
+		//Establezco la view
+		scrollPane.setViewportView(panelAmigos);
+		//Añado el scrollPane al main Frame
+		contentPane.add(scrollPane);
+		
+		JPanel panelGrupos = new JPanel();
+		panelGrupos.setVisible(false);
+		panelGrupos.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+		panelGrupos.setBackground(new Color(236, 230, 250));
+		panelGrupos.setBounds(10, 58, 291, 391);
+		contentPane.add(panelGrupos);
+		panel_1.setLayout(new BorderLayout(0, 0));
+		
+		textMensaje = new JTextArea("");
+		textMensaje.setEnabled(false);
+		textMensaje.setBackground(Color.WHITE);
+		textMensaje.setForeground(Color.BLACK);
+		textMensaje.setBounds(2, 2, 282, 43);
+		textMensaje.setLineWrap(true);
+		JScrollPane scrollTexto = new JScrollPane(textMensaje);
+		panel_1.add(scrollTexto);
+		//scrollMsj.setBorder(new LineBorder(Color.BLACK));
+		//scrollMsj.getViewport().setBackground(Color.WHITE);
+		//scrollMsj.setViewportView(textMensaje);
+		//scrollMsj.add(textMensaje);
+		
+		//panel_1.setPreferredSize(new Dimension(286, 47));
 		
 		
 		ImageIcon iconGroup = new ImageIcon(Login.class.getResource("/img/grupo.png"));
 		iconGroup.getImage().flush();
 		
-		ImageIcon iconUser = new ImageIcon(Login.class.getResource("/img/conver.png"));
-		iconGroup.getImage().flush();
+
 		
 		JPanel panelOpciones = new JPanel();
 		panelOpciones.setBounds(10, 11, 291, 46);
@@ -141,26 +143,28 @@ public class PantallaPrincipal extends JFrame {
 		JButton btnNewButton = new JButton(iconGroup);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				lblAmigosGrupos.setText("Grupos");
+				scrollPane.setVisible(false);
+				panelGrupos.setVisible(true);
+				panelAmigos.setVisible(false);
+				panelVacio.setVisible(false);
 				lblAñadirAmigo.setIcon(null);
 			}
 		});
 		btnNewButton.setFocusPainted(false);
 		btnNewButton.setBounds(66, 9, 46, 29);
-		panelOpciones.add(btnNewButton);
+		ImageIcon iconUser = new ImageIcon(Login.class.getResource("/img/conver.png"));
+		iconUser.getImage().flush();
 		JButton btnNewButton_1 = new JButton(iconUser);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				lblAmigosGrupos.setText("Amigos");
-				panelVacio.setVisible(false);
+				scrollPane.setVisible(true);
 				panelAmigos.setVisible(true);
-				panelAmigos.add(lblAmigosGrupos);
-				ImageIcon iconAñadir = new ImageIcon(Login.class.getResource("/img/añadirAmigo.png"));
-				iconAñadir.getImage().flush();
-				lblAñadirAmigo.setIcon(iconAñadir);
+				panelVacio.setVisible(false);
+				panelGrupos.setVisible(false);
 				cargarAmigos();
 			}
 		});
+		panelOpciones.add(btnNewButton);
 		btnNewButton_1.setFocusPainted(false);
 		btnNewButton_1.setBounds(10, 9, 46, 29);
 		panelOpciones.add(btnNewButton_1);
@@ -180,40 +184,56 @@ public class PantallaPrincipal extends JFrame {
 		lblCerrar.setBounds(257, 11, 24, 22);
 		lblCerrar.setVisible(false);
 		panelNombre.add(lblCerrar);
+		
+		
+		ImageIcon iconSend = new ImageIcon(Login.class.getResource("/img/send.png"));
+		iconSend.getImage().flush();
+		btnEnviarMensaje = new JButton(iconSend);
+		btnEnviarMensaje.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controlador.enviarMensajeConver(Usuario,textMensaje.getText(),lblConverGrupo.getText());
+				ArrayList<String> Mensajes = controlador.cargarMensajes(Usuario, lblConverGrupo.getText());
+				panel.removeAll();
+				mostrarMensajes(Mensajes);
+				panel.revalidate();
+				panel.repaint();
+			}
+		});
+		btnEnviarMensaje.setBounds(629, 400, 39, 47);
+		contentPane.add(btnEnviarMensaje);
+
+
+		JScrollPane scrollMensaje = new JScrollPane();
+		scrollMensaje.setSize(291, 340);
+		scrollMensaje.setLocation(377, 58);
+		scrollMensaje.setViewportView(panel);
+		contentPane.add(scrollMensaje);
+
 
 		
 	}
 	
 	private void cargarAmigos() {
-		
 		ArrayList<String> amigos = controlador.ObtenerAmigos(Usuario);
-		
-		for (int i = 0; i < amigos.size(); i++) {
-			System.out.println(amigos.get(i).toString());
-		}
-		
-		//amigosPanel = new JPanel[amigos.size()]; 
-		//for (int i = 0; i < amigosPanel.length; i++) {
-			//if (amigosPanel[i] != null) {
-				//amigosPanel[i].removeAll();
-			//}
-		//}
-		
+		amigosPanel = new ArrayList<JPanel>();
+		InicializarAñadirAmigos();
 		int altura = 55;
 		for (int i = 0; i < amigos.size(); i++) {
-			amigosPanel[i] = new JPanel();
-			amigosPanel[i].setBackground(Color.WHITE);
-			amigosPanel[i].setBounds(71, altura, 164, 33);
-			amigosPanel[i].setBorder(new LineBorder(new Color(204, 204, 255), 2));
-			panelAmigos.add(amigosPanel[i]);
-			amigosPanel[i].setLayout(null);
+			amigosPanel.add(new JPanel());
+			amigosPanel.get(i).setBackground(Color.WHITE);
+			amigosPanel.get(i).setBounds(71, altura, 164, 33);
+			amigosPanel.get(i).setBorder(new LineBorder(new Color(204, 204, 255), 2));
+			panelAmigos.add(amigosPanel.get(i));
+			amigosPanel.get(i).setLayout(null);
+			
 			JLabel lblNewLabel_1 = new JLabel("");
 			lblNewLabel_1.setText(amigos.get(i).toString());
 			lblNewLabel_1.setBounds(23, 9, 109, 14);
 			lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-			amigosPanel[i].add(lblNewLabel_1);
+			amigosPanel.get(i).add(lblNewLabel_1);
 			
-			String usuarioString = amigos.get(i);
+			System.out.println("Sout get" + amigos.get(i));
+			String usuarioString = amigos.get(i).toString();
 			
 			JLabel lblNewLabel_2 = new JLabel("");
 			ImageIcon iconDM = new ImageIcon(Login.class.getResource("/img/DM.png"));
@@ -232,14 +252,37 @@ public class PantallaPrincipal extends JFrame {
 					lblCerrar.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseClicked(MouseEvent e) {
+							panel.removeAll();
+							panel.revalidate();
+							panel.repaint();
 							textMensaje.setEnabled(false);
 							lblConverGrupo.setText("");
 							lblCerrar.setIcon(null);
 						}
 					});
+					if(controlador.existeConversacion(Usuario,usuarioString)) {
+						System.out.println("Carga datos");
+						System.out.println(usuarioString);
+						ArrayList<String> Mensajes = controlador.cargarMensajes(Usuario, usuarioString);
+						if(Mensajes != null) {
+							for(int i = 0; i < Mensajes.size(); i++) {
+								System.out.println(i + ". " + Mensajes.get(i));
+							}
+							panel.removeAll();
+							mostrarMensajes(Mensajes);
+							panel.revalidate();
+							panel.repaint();
+						} else {
+							System.out.println("No existe la conversación");
+						}
+					} else {
+						System.out.println("Crea conversación");
+						controlador.crearConversacion(Usuario, usuarioString);
+					}
 				}
+
 			});
-			amigosPanel[i].add(lblNewLabel_2);
+			amigosPanel.get(i).add(lblNewLabel_2);
 			JLabel lblNewLabel_3 = new JLabel("");
 			ImageIcon iconBorrar = new ImageIcon(Login.class.getResource("/img/borrar.png"));
 			iconBorrar.getImage().flush();
@@ -249,15 +292,75 @@ public class PantallaPrincipal extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					controlador.borrarAmigo(Usuario, usuarioString);
+					panelAmigos.removeAll();
 					cargarAmigos();
-					panelAmigos.setVisible(false);
-					panelVacio.setVisible(true);
-					panelVacio.setVisible(false);
-					panelAmigos.setVisible(true);
+					panelAmigos.revalidate();
+					panelAmigos.repaint();
+					
+					
 				}
 			});
-			amigosPanel[i].add(lblNewLabel_3);
+			amigosPanel.get(i).add(lblNewLabel_3);
 			altura += 36;
 		}
+		panelAmigos.setPreferredSize(new Dimension(0, altura));
+	}
+	
+	protected void mostrarMensajes(ArrayList<String> mensajes) {
+		mensajesPanel = new ArrayList<JPanel>();
+		int altura = 10;
+		
+		for(int i = 0; i < mensajes.size(); i++) {
+			
+			mensajesPanel.add(new JPanel());
+			mensajesPanel.get(i).setBackground(Color.WHITE);
+			mensajesPanel.get(i).setBounds(71, altura, 164, 50);
+			mensajesPanel.get(i).setLayout(null);
+			
+			if(mensajes.get(i).split(",")[0].equals(Usuario)) {
+				mensajesPanel.get(i).setBorder(new TitledBorder(new LineBorder(new Color(230, 230, 250), 2, true), Usuario , TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			} else {
+				mensajesPanel.get(i).setBorder(new TitledBorder(new LineBorder(new Color(230, 230, 250), 2, true), mensajes.get(i).split(",")[0], TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			}
+			
+			JLabel lblNewLabel_1 = new JLabel("");
+			lblNewLabel_1.setText(mensajes.get(i).split(",")[1]);
+			lblNewLabel_1.setBounds(23, 22, 109, 14);
+			lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+			mensajesPanel.get(i).add(lblNewLabel_1);
+			panel.add(mensajesPanel.get(i));
+			altura += 55;
+		}
+		panel.setPreferredSize(new Dimension(0, altura));
+		
+	}
+
+	private void InicializarAñadirAmigos() {
+		lblAñadirAmigo = new JLabel("");
+		lblAñadirAmigo.setBounds(170, 11, 46, 38);
+		lblAmigosGrupos.setText("Amigos");
+		lblAmigosGrupos.setBounds(115, 20, 59, 21);
+		lblAmigosGrupos.setFont(new Font("Trebuchet MS", Font.BOLD, 13));
+		lblAmigosGrupos.setBounds(127, 20, 59, 21);
+		panelAmigos.add(lblAmigosGrupos);
+		ImageIcon iconAñadir = new ImageIcon(Login.class.getResource("/img/añadirAmigo.png"));
+		iconAñadir.getImage().flush();
+		lblAñadirAmigo.setIcon(iconAñadir);
+		lblAñadirAmigo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					String amigo = JOptionPane.showInputDialog("Introduzca el usuario a añadir");
+					controlador.añadirAmigo(Usuario,amigo);
+					panelAmigos.removeAll();
+					cargarAmigos();	
+					panelAmigos.revalidate();
+					panelAmigos.repaint();
+				} catch (Exception exc) {
+					
+				}
+			}
+		});
+		panelAmigos.add(lblAñadirAmigo);
 	}
 }

@@ -125,7 +125,7 @@ public class Controlador {
         
         try {
 
-        	PreparedStatement psLogin = cnConnection.prepareStatement("SELECT count(*) as Nombre FROM usuario WHERE usuario=?");
+        	PreparedStatement psLogin = cnConnection.prepareStatement("SELECT count(*) FROM usuario WHERE usuario=?");
         	psLogin.setString(1, amigo);
         	ResultSet rs = psLogin.executeQuery();
         	rs.next();
@@ -148,7 +148,6 @@ public class Controlador {
     	Connection cnConnection = c.conexion();
         
         try {
-        		
             	PreparedStatement psBorrar = cnConnection.prepareStatement("DELETE FROM public.amigo WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
             	psBorrar.setString(1, usuario);
             	psBorrar.setString(2, amigo);
@@ -159,6 +158,115 @@ public class Controlador {
             	cnConnection.close();
 		} catch (SQLException e) {	
 			JOptionPane.showMessageDialog(null, "Lo siento, ese amigo ya es tu amigo o no existe");
+		}
+		
+	}
+
+	public boolean existeConversacion(String usuario, String usuarioString) {
+		Connection cnConnection = c.conexion();
+        
+        try {
+
+        	PreparedStatement psExisteConver = cnConnection.prepareStatement("SELECT count(*) FROM conversacion WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
+        	psExisteConver.setString(1, usuario);
+        	psExisteConver.setString(2, usuarioString);
+        	psExisteConver.setString(3, usuarioString);
+        	psExisteConver.setString(4, usuario);
+        	ResultSet rs = psExisteConver.executeQuery();
+        	rs.next();
+        	
+        	int count = rs.getInt(1);
+        	cnConnection.close();
+        	if (count==1) {
+        		return true;
+			}  else {
+				return false;
+			}
+        	
+		} catch (SQLException e) {	
+			JOptionPane.showMessageDialog(null, "Lo siento, algo ha salido mal.");
+		}
+        return false;
+	}
+	
+	
+	public void crearConversacion(String usuario, String usuarioString) {
+		Connection cnConnection = c.conexion();
+
+        
+        try {
+            	PreparedStatement psCrearConver = cnConnection.prepareStatement("INSERT INTO public.conversacion(usuario1, usuario2) VALUES (?, ?);");
+            	psCrearConver.setString(1, usuario);
+            	psCrearConver.setString(2, usuarioString);
+            	psCrearConver.executeUpdate();
+			
+            	cnConnection.close();
+		} catch (SQLException e) {	
+			System.out.println(e);
+		}
+	}
+
+	public ArrayList<String> cargarMensajes(String usuario, String usuarioString) {
+		ArrayList<String> Mensajes = new ArrayList<String>();
+		Connection cnConnection = c.conexion();
+		System.out.println("Usuario: " + usuario + " Amigo: " + usuarioString);
+        try {
+        	PreparedStatement psIDConversacion = cnConnection.prepareStatement("SELECT id_conversacion FROM conversacion WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
+    		psIDConversacion.setString(1, usuario);
+    		psIDConversacion.setString(2, usuarioString);
+    		psIDConversacion.setString(3, usuarioString);
+    		psIDConversacion.setString(4, usuario);
+        	ResultSet rsID = psIDConversacion.executeQuery();
+        	rsID.next();
+        	int IDConver = rsID.getInt(1);
+        	System.out.println("ID: " + IDConver);
+        	PreparedStatement psMensajeEnviado = cnConnection.prepareStatement("SELECT usuario,id_mensaje FROM mensaje_conversacion_usuario WHERE id_conversacion=?;");
+        	psMensajeEnviado.setInt(1, IDConver);
+        	ResultSet rsMensajes = psMensajeEnviado.executeQuery();
+        	
+        	while(rsMensajes.next()) {
+        		String mensaje = rsMensajes.getString("usuario")+",";
+            	PreparedStatement psTextoMensaje = cnConnection.prepareStatement("SELECT texto FROM mensaje WHERE id_mensaje=?;");
+            	psTextoMensaje.setInt(1, rsMensajes.getInt("id_mensaje"));
+            	ResultSet rsTextoMensaje = psTextoMensaje.executeQuery();
+            	rsTextoMensaje.next();
+            	mensaje += rsTextoMensaje.getString(1);
+            	Mensajes.add(mensaje);
+        	}
+        	
+        	return Mensajes;
+        	
+		} catch (SQLException e) {	
+			System.out.println(e);
+		}
+		return null;
+	}
+
+	public void enviarMensajeConver(String usuario, String text, String amigo) {
+		Connection cnConnection = c.conexion();
+		
+        
+        try {
+        		cnConnection.setAutoCommit(false);
+            	PreparedStatement psCrearMensaje = cnConnection.prepareStatement("INSERT INTO public.mensaje(texto) VALUES (?);");
+            	psCrearMensaje.setString(1, text);
+            	psCrearMensaje.executeUpdate();
+            	PreparedStatement psIDConversacion = cnConnection.prepareStatement("SELECT id_conversacion FROM conversacion WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
+        		psIDConversacion.setString(1, usuario);
+        		psIDConversacion.setString(2, amigo);
+        		psIDConversacion.setString(3, amigo);
+        		psIDConversacion.setString(4, usuario);
+            	ResultSet rsID = psIDConversacion.executeQuery();
+            	rsID.next();
+            	int IDConver = rsID.getInt(1);
+            	PreparedStatement psEnviarMensaje = cnConnection.prepareStatement("INSERT INTO public.mensaje_conversacion_usuario(usuario, id_conversacion, id_mensaje, fecha, hora) VALUES (?, ?, lastval(), current_date, current_time);");
+            	psEnviarMensaje.setString(1, usuario);
+            	psEnviarMensaje.setInt(2, IDConver);
+            	psEnviarMensaje.executeUpdate();
+            	cnConnection.commit();
+            	cnConnection.close();
+		} catch (SQLException e) {	
+			System.out.println(e);
 		}
 		
 	}
