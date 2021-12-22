@@ -181,14 +181,29 @@ public class PantallaPrincipal extends JFrame {
 		panelNombre.add(lblConverGrupo);
 		
 		lblCerrar = new JLabel("");
-		lblCerrar.setBounds(257, 11, 24, 22);
+		lblCerrar.setBounds(257, 13, 24, 22);
 		lblCerrar.setVisible(false);
 		panelNombre.add(lblCerrar);
+		
+		ImageIcon iconBorrarConver = new ImageIcon(Login.class.getResource("/img/borrarConver.png"));
+		iconBorrarConver.getImage().flush();
+		JButton btnBorrarConver = new JButton(iconBorrarConver);
+		btnBorrarConver.setFocusPainted(false);
+		btnBorrarConver.setBounds(100, 9, 46, 29);
+		panelNombre.add(btnBorrarConver);
+		
+		ImageIcon iconBorrarMensajes = new ImageIcon(Login.class.getResource("/img/borrarMensajes.png"));
+		iconBorrarMensajes.getImage().flush();
+		JButton btnLimpiarChat = new JButton(iconBorrarMensajes);
+		btnLimpiarChat.setFocusPainted(false);
+		btnLimpiarChat.setBounds(160, 9, 46, 29);
+		panelNombre.add(btnLimpiarChat);
 		
 		
 		ImageIcon iconSend = new ImageIcon(Login.class.getResource("/img/send.png"));
 		iconSend.getImage().flush();
 		btnEnviarMensaje = new JButton(iconSend);
+		btnEnviarMensaje.setEnabled(false);
 		btnEnviarMensaje.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controlador.enviarMensajeConver(Usuario,textMensaje.getText(),lblConverGrupo.getText());
@@ -245,6 +260,7 @@ public class PantallaPrincipal extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					lblConverGrupo.setText(usuarioString);
 					textMensaje.setEnabled(true);
+					btnEnviarMensaje.setEnabled(true);
 					ImageIcon iconCerrar = new ImageIcon(Login.class.getResource("/img/cerrar.png"));
 					iconDM.getImage().flush();
 					lblCerrar.setIcon(iconCerrar);
@@ -252,6 +268,7 @@ public class PantallaPrincipal extends JFrame {
 					lblCerrar.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseClicked(MouseEvent e) {
+							btnEnviarMensaje.setEnabled(false);
 							panel.removeAll();
 							panel.revalidate();
 							panel.repaint();
