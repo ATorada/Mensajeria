@@ -36,6 +36,7 @@ public class Register extends JDialog {
 		contentPane = new JPanel();
 		contentPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
 		contentPane.setBackground(new Color(230, 230, 250));
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
