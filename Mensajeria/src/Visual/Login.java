@@ -1,207 +1,205 @@
 package Visual;
-import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JPasswordField;
+import BBDD.DatosBBDD;
+import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import java.awt.Color;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
-import Controlador.Controlador;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.SQLException;
-
+/**
+ *
+ * @author Ángel Torada
+ */
 public class Login extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JPasswordField passwordField;
-	private JLabel lblNewLabel_2;
-	private JTextField textField_1;
-	private Controlador controlador = new Controlador();
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Login frame = new Login();
-					frame.setLocationRelativeTo(null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    private static final long serialVersionUID = 1L;
+    private final JPanel contentPane;
+    private JPasswordField passwordField;
+    private final JLabel iconoUsuario;
+    private JTextField usuarioTextField;
+    private DatosBBDD controlador = new DatosBBDD();
 
-	/**
-	 * Create the frame.
-	 */
-	public Login() {
-		setTitle("Inicio");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
-		contentPane.setBackground(new Color(230, 230, 250));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Usuario",SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblNewLabel.setBounds(175, 49, 86, 14);
-		contentPane.add(lblNewLabel);
-		
-		JLabel lblNewLabel_1 = new JLabel("Contrase\u00F1a",SwingConstants.CENTER);
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblNewLabel_1.setBounds(175, 122, 86, 14);
-		contentPane.add(lblNewLabel_1);
-		
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(204, 204, 255));
-		panel.setBounds(163, 148, 121, 28);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBackground(new Color(204, 204, 255));
-		panel_1.setBounds(163, 75, 121, 28);
-		contentPane.add(panel_1);
-		
-		JLabel lblError = new JLabel("");
-		lblError.setHorizontalAlignment(SwingConstants.CENTER);
-		lblError.setForeground(Color.RED);
-		lblError.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblError.setBounds(89, 28, 269, 16);
-		contentPane.add(lblError);
-		
-		JButton btnNewButton = new JButton("Iniciar Sesi\u00F3n");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if(controlador.loginUsuario(textField_1.getText(), passwordField.getText())) {
-						PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(textField_1.getText());
-						pantallaPrincipal.setLocationRelativeTo(null);
-						pantallaPrincipal.setVisible(true);
-					} else {
-						panel_1.setBackground(Color.RED);
-						panel.setBackground(Color.RED);
-						lblError.setText("El usuario o la contraseña no son correctos.");
-					}
-				} catch (SQLException e1) {
-					panel_1.setBackground(Color.RED);
-					panel.setBackground(Color.RED);
-					lblError.setText("El usuario o la contraseña no son correctos.");
-				}
-			}
-		});
-		btnNewButton.setBackground(new Color(230, 230, 250));
-		btnNewButton.setBounds(89, 205, 121, 28);
-		contentPane.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Registrarse");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Register register = new Register();
-				register.setLocationRelativeTo(null);
-				register.setModal(true);
-				register.setVisible(true);
-			}
-		});
-		btnNewButton_1.setBackground(new Color(236, 230, 250));
-		btnNewButton_1.setBounds(235, 205, 101, 28);
-		contentPane.add(btnNewButton_1);
-		
-		lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setBounds(122, 68, 29, 39);
-		ImageIcon iconUser = new ImageIcon(Login.class.getResource("/img/icono.png"));
-		iconUser.getImage().flush();
-		lblNewLabel_2.setIcon(iconUser);
-		contentPane.add(lblNewLabel_2);
-		
-		JLabel lblNewLabel_2_1 = new JLabel("");
-		lblNewLabel_2_1.setBounds(122, 142, 29, 39);
-		ImageIcon iconContra = new ImageIcon(Login.class.getResource("/img/contra.png"));
-		iconContra.getImage().flush();
-		lblNewLabel_2_1.setIcon(iconContra);
-		contentPane.add(lblNewLabel_2_1);
-		
-		
-		textField_1 = new JTextField();
-		textField_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if(controlador.loginUsuario(textField_1.getText(), passwordField.getText())) {
-						PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(textField_1.getText());
-						pantallaPrincipal.setLocationRelativeTo(null);
-						pantallaPrincipal.setModal(true);
-						pantallaPrincipal.setVisible(true);
-					} else {
-						panel_1.setBackground(Color.RED);
-						panel.setBackground(Color.RED);
-						lblError.setText("El usuario o la contraseña no son correctos.");
-					}
-				} catch (SQLException e1) {
-					panel_1.setBackground(Color.RED);
-					panel.setBackground(Color.RED);
-					lblError.setText("El usuario o la contraseña no son correctos.");
-				}
-			}
-		});
-		textField_1.setText("");
-		textField_1.setColumns(10);
-		textField_1.setBounds(0, 0, 121, 28);
-		
-		
-		passwordField = new JPasswordField();
-		passwordField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if(controlador.loginUsuario(textField_1.getText(), passwordField.getText())) {
-						PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(textField_1.getText());
-						pantallaPrincipal.setLocationRelativeTo(null);
-						pantallaPrincipal.setModal(true);
-						pantallaPrincipal.setVisible(true);
-					} else {
-						panel_1.setBackground(Color.RED);
-						panel.setBackground(Color.RED);
-						lblError.setText("El usuario o la contraseña no son correctos.");
-					}
-				} catch (SQLException e1) {
-					panel_1.setBackground(Color.RED);
-					panel.setBackground(Color.RED);
-					lblError.setText("El usuario o la contraseña no son correctos.");
-				}
-			}
-		});
-		passwordField.setBounds(0, 0, 121, 28);
-		panel.add(passwordField);
-		panel_1.add(textField_1);
-		
+    /**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+        }
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Login frame = new Login();
+                    frame.setLocationRelativeTo(null);
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                }
+            }
+        });
+    }
 
+    /**
+     *
+     */
+    public Login() {
+        setTitle("Inicio");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 450, 300);
+        contentPane = new JPanel();
+        contentPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
+        contentPane.setBackground(new Color(230, 230, 250));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
 
+        JLabel usuario = new JLabel("Usuario", SwingConstants.CENTER);
+        usuario.setFont(new Font("Tahoma", Font.BOLD, 13));
+        usuario.setBounds(175, 49, 86, 14);
+        contentPane.add(usuario);
 
-	}
+        JLabel contrasenya = new JLabel("Contraseña", SwingConstants.CENTER);
+        contrasenya.setFont(new Font("Tahoma", Font.BOLD, 13));
+        contrasenya.setBounds(175, 122, 86, 14);
+        contentPane.add(contrasenya);
+
+        JPanel borde1 = new JPanel();
+        borde1.setBackground(new Color(204, 204, 255));
+        borde1.setBounds(163, 148, 121, 28);
+        contentPane.add(borde1);
+        borde1.setLayout(null);
+
+        JPanel borde2 = new JPanel();
+        borde2.setLayout(null);
+        borde2.setBackground(new Color(204, 204, 255));
+        borde2.setBounds(163, 75, 121, 28);
+        contentPane.add(borde2);
+
+        JLabel lblError = new JLabel("");
+        lblError.setHorizontalAlignment(SwingConstants.CENTER);
+        lblError.setForeground(Color.RED);
+        lblError.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblError.setBounds(89, 28, 269, 16);
+        contentPane.add(lblError);
+
+        JButton btnNewButton = new JButton("Iniciar Sesión");
+        btnNewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (controlador.loginUsuario(usuarioTextField.getText(), passwordField.getText())) {
+                        PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(usuarioTextField.getText());
+                        pantallaPrincipal.setLocationRelativeTo(null);
+                        pantallaPrincipal.setVisible(true);
+                    } else {
+                        borde2.setBackground(Color.RED);
+                        borde1.setBackground(Color.RED);
+                        lblError.setText("El usuario o la contraseña no son correctos.");
+                    }
+                } catch (SQLException e1) {
+                    borde2.setBackground(Color.RED);
+                    borde1.setBackground(Color.RED);
+                    lblError.setText("El usuario o la contraseña no son correctos.");
+                }
+            }
+        });
+        btnNewButton.setBackground(new Color(230, 230, 250));
+        btnNewButton.setBounds(89, 205, 121, 28);
+        contentPane.add(btnNewButton);
+
+        JButton registrarse = new JButton("Registrarse");
+        registrarse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Register register = new Register();
+                register.setLocationRelativeTo(null);
+                register.setModal(true);
+                register.setVisible(true);
+            }
+        });
+        registrarse.setBackground(new Color(236, 230, 250));
+        registrarse.setBounds(235, 205, 101, 28);
+        contentPane.add(registrarse);
+
+        iconoUsuario = new JLabel("");
+        iconoUsuario.setBounds(122, 68, 29, 39);
+        ImageIcon iconUser = new ImageIcon(Login.class.getResource("/img/icono.png"));
+        iconUser.getImage().flush();
+        iconoUsuario.setIcon(iconUser);
+        contentPane.add(iconoUsuario);
+
+        JLabel iconoContra = new JLabel("");
+        iconoContra.setBounds(122, 142, 29, 39);
+        ImageIcon iconContra = new ImageIcon(Login.class.getResource("/img/contra.png"));
+        iconContra.getImage().flush();
+        iconoContra.setIcon(iconContra);
+        contentPane.add(iconoContra);
+
+        usuarioTextField = new JTextField();
+        usuarioTextField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (controlador.loginUsuario(usuarioTextField.getText(), passwordField.getText())) {
+                        PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(usuarioTextField.getText());
+                        pantallaPrincipal.setLocationRelativeTo(null);
+                        pantallaPrincipal.setModal(true);
+                        pantallaPrincipal.setVisible(true);
+                    } else {
+                        borde2.setBackground(Color.RED);
+                        borde1.setBackground(Color.RED);
+                        lblError.setText("El usuario o la contraseña no son correctos.");
+                    }
+                } catch (SQLException e1) {
+                    borde2.setBackground(Color.RED);
+                    borde1.setBackground(Color.RED);
+                    lblError.setText("El usuario o la contraseña no son correctos.");
+                }
+            }
+        });
+        usuarioTextField.setText("");
+        usuarioTextField.setColumns(10);
+        usuarioTextField.setBounds(0, 0, 121, 28);
+
+        passwordField = new JPasswordField();
+        passwordField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (controlador.loginUsuario(usuarioTextField.getText(), passwordField.getText())) {
+                        PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(usuarioTextField.getText());
+                        pantallaPrincipal.setLocationRelativeTo(null);
+                        pantallaPrincipal.setModal(true);
+                        pantallaPrincipal.setVisible(true);
+                    } else {
+                        borde2.setBackground(Color.RED);
+                        borde1.setBackground(Color.RED);
+                        lblError.setText("El usuario o la contraseña no son correctos.");
+                    }
+                } catch (SQLException e1) {
+                    borde2.setBackground(Color.RED);
+                    borde1.setBackground(Color.RED);
+                    lblError.setText("El usuario o la contraseña no son correctos.");
+                }
+            }
+        });
+        passwordField.setBounds(0, 0, 121, 28);
+        borde1.add(passwordField);
+        borde2.add(usuarioTextField);
+
+    }
 }
