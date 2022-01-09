@@ -18,6 +18,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
+import java.awt.Toolkit;
 
 /**
  *
@@ -58,6 +59,7 @@ public class Login extends JFrame {
      *
      */
     public Login() {
+    	setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/img/Mensajeria_icon.png")));
         setTitle("Inicio");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);

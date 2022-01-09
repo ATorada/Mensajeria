@@ -15,6 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+import java.awt.Toolkit;
 
 /**
  *
@@ -33,6 +34,7 @@ public class Register extends JDialog {
      * Constructor
      */
     public Register() {
+    	setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/img/Mensajeria_icon.png")));
 
         setTitle("Registro");
         setBounds(100, 100, 451, 424);
@@ -79,7 +81,7 @@ public class Register extends JDialog {
         lblError.setHorizontalAlignment(SwingConstants.CENTER);
         lblError.setFont(new Font("Tahoma", Font.BOLD, 13));
         lblError.setForeground(new Color(255, 0, 0));
-        lblError.setBounds(116, 305, 212, 16);
+        lblError.setBounds(33, 305, 365, 16);
         contentPane.add(lblError);
 
         JLabel lblNewLabel_2 = new JLabel("");
@@ -112,7 +114,7 @@ public class Register extends JDialog {
                         JOptionPane.showMessageDialog(null, "Se ha creado el usuario correctamente.");
                         dispose();
                     } catch (SQLException e1) {
-                        lblError.setText("Hay un usuario con ese nombre.");
+                        lblError.setText("Hay un usuario con ese nombre o es demasiado largo.");
                         panelUsuario.setBackground(Color.RED);
                         panelContra.setBackground(new Color(204, 204, 255));
                         panelRepContra.setBackground(new Color(204, 204, 255));

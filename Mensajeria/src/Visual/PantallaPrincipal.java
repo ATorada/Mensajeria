@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import java.awt.Toolkit;
 
 /**
  *
@@ -74,6 +75,7 @@ public class PantallaPrincipal extends JDialog {
      * @param Usuario Usuario que ha iniciado sesión
      */
     public PantallaPrincipal(String Usuario) {
+    	setIconImage(Toolkit.getDefaultToolkit().getImage(PantallaPrincipal.class.getResource("/img/Mensajeria_icon.png")));
         setResizable(false);
         this.Usuario = Usuario;
         lblAmigos = new JLabel();
@@ -411,8 +413,9 @@ public class PantallaPrincipal extends JDialog {
                     //Se establece el grupo actual en una variable global
                     GrupoActual = id;
 
-                    //Comprueba si es administrador para mostrar las opciones respectivas de un admin.
-                    if (controlador.esAdmin(Usuario, GrupoActual)) {
+                    //Comprueba si es administrador para mostrar las opciones respectivas de un admin o es el ultimo usuario.
+                    ArrayList<String> personasGrupo = controlador.cargarUsuariosGrupo(GrupoActual);
+                    if (controlador.esAdmin(Usuario, GrupoActual) || personasGrupo.size() == 1) {
                         btnBorrarGrupo.setVisible(true);
                         btnBorrarUsuariosGrupo.setVisible(true);
                     } else {
@@ -466,12 +469,12 @@ public class PantallaPrincipal extends JDialog {
             });
 
             //Se crea el Label que permite añadir un usuario al grupo
-            JLabel añadirUsuario = new JLabel("");
-            ImageIcon iconAnyadir = new ImageIcon(Login.class.getResource("/img/añadirAmigo.png"));
+            JLabel anyadirUsuario = new JLabel("");
+            ImageIcon iconAnyadir = new ImageIcon(Login.class.getResource("/img/anyadirAmigo.png"));
             iconAnyadir.getImage().flush();
-            añadirUsuario.setIcon(iconAnyadir);
-            añadirUsuario.setBounds(5, 9, 25, 16);
-            añadirUsuario.addMouseListener(new MouseAdapter() {
+            anyadirUsuario.setIcon(iconAnyadir);
+            anyadirUsuario.setBounds(5, 9, 25, 16);
+            anyadirUsuario.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     try {
@@ -545,7 +548,7 @@ public class PantallaPrincipal extends JDialog {
 
             //Se añaden los labels
             gruposPanel.get(i).add(abrirMensajes);
-            gruposPanel.get(i).add(añadirUsuario);
+            gruposPanel.get(i).add(anyadirUsuario);
             gruposPanel.get(i).add(salirGrupo);
 
             //Se incrementa la altura
@@ -566,7 +569,6 @@ public class PantallaPrincipal extends JDialog {
         //Obtiene los usuarios del grupo de la base de datos
         ArrayList<String> personasGrupo = controlador.cargarUsuariosGrupo(GrupoActual);
         gruposUsuarios = new ArrayList<>();
-
         //Establece la primera altura
         int altura = 30;
         //For que crea un JPanel por cada usuario del grupo
@@ -603,6 +605,7 @@ public class PantallaPrincipal extends JDialog {
 						//Borra el usuario de la base de datos
 						controlador.borrarUsuarioGrupo(GrupoActual, usuarioString);
 						//En caso de que sea él mismo limpia la interfaz en caso de que no solo la lista de usuarios
+						
 						if (usuarioString.equals(Usuario)) {
 						    scrollMensaje.setViewportView(panelMensajes);
 						    panelMensajes.setVisible(true);
@@ -812,7 +815,7 @@ public class PantallaPrincipal extends JDialog {
         //Crea el botón
         JButton btnAnyadirAmigo = new JButton();
         btnAnyadirAmigo.setBounds(170, 11, 46, 38);
-        ImageIcon iconAnyadir = new ImageIcon(Login.class.getResource("/img/añadirAmigo.png"));
+        ImageIcon iconAnyadir = new ImageIcon(Login.class.getResource("/img/anyadirAmigo.png"));
         iconAnyadir.getImage().flush();
         btnAnyadirAmigo.setIcon(iconAnyadir);
         btnAnyadirAmigo.setBorderPainted(false);
@@ -858,7 +861,7 @@ public class PantallaPrincipal extends JDialog {
         //Crea el botón para crear un grupo
         JButton btnCrearGrupo = new JButton();
         btnCrearGrupo.setBounds(170, 11, 46, 38);
-        ImageIcon iconAnyadir = new ImageIcon(Login.class.getResource("/img/añadirAmigo.png"));
+        ImageIcon iconAnyadir = new ImageIcon(Login.class.getResource("/img/anyadirAmigo.png"));
         iconAnyadir.getImage().flush();
         btnCrearGrupo.setBorderPainted(false);
         btnCrearGrupo.setFocusPainted(false);
@@ -873,7 +876,6 @@ public class PantallaPrincipal extends JDialog {
                     String nombre = JOptionPane.showInputDialog("Introduzca el nombre del grupo");
                     if (nombre != null) {
                         controlador.anyadirGrupo(Usuario, nombre);
-
                         //Recarga la interfaz
                         panelGrupos.removeAll();
                         cargarGrupos();

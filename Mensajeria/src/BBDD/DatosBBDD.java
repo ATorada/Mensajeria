@@ -55,9 +55,10 @@ public class DatosBBDD {
      * @throws SQLException En caso de que haya una excepción la lanzará
      */
     public boolean loginUsuario(String Usuario, String Contra) throws SQLException {
-        Connection cnConnection = c.conexion();
+        
 
         try {
+        	Connection cnConnection = c.conexion();
             PreparedStatement psLogin = cnConnection.prepareStatement("SELECT count(*) FROM usuario WHERE usuario = ? AND contra = ?;");
             psLogin.setString(1, Usuario);
             psLogin.setString(2, cifrarContra(Contra));
@@ -100,10 +101,10 @@ public class DatosBBDD {
      * @return Devolverá un Arraylist con los amigos del usuario
      */
     public ArrayList<String> ObtenerAmigos(String Usuario) {
-        Connection cnConnection = c.conexion();
+        
 
         try {
-
+        	Connection cnConnection = c.conexion();
             PreparedStatement psLogin = cnConnection.prepareStatement("SELECT usuario1 as Nombre FROM amigo WHERE usuario2 = ? UNION SELECT usuario2 FROM amigo WHERE usuario1 = ?;");
             psLogin.setString(1, Usuario);
             psLogin.setString(2, Usuario);
@@ -120,6 +121,7 @@ public class DatosBBDD {
         } catch (SQLException e) {
             System.out.println("Algo ha salido mal con la conexión a la base de datos.");
         }
+        
         return null;
 
     }
@@ -131,10 +133,9 @@ public class DatosBBDD {
      * @param amigo Amigo el cual se va a añadir
      */
     public void anyadirAmigo(String usuario, String amigo) {
-        Connection cnConnection = c.conexion();
 
         try {
-
+            Connection cnConnection = c.conexion();
             PreparedStatement psLogin = cnConnection.prepareStatement("SELECT count(*) FROM usuario WHERE usuario=?");
             psLogin.setString(1, amigo);
             ResultSet rs = psLogin.executeQuery();
@@ -147,6 +148,9 @@ public class DatosBBDD {
                 psAnyadir.setString(1, usuario);
                 psAnyadir.setString(2, amigo);
                 psAnyadir.executeUpdate();
+            } else {
+            	//En caso de que no exista avisará al usuario.
+                JOptionPane.showMessageDialog(null, "Lo siento, ese amigo ya es tu amigo o no existe");
             }
             cnConnection.close();
         } catch (SQLException e) {
@@ -162,10 +166,10 @@ public class DatosBBDD {
      * @param amigo Amigo el cual va a ser borrado del usuario
      */
     public void borrarAmigo(String usuario, String amigo) {
-        Connection cnConnection = c.conexion();
 
         try {
-            PreparedStatement psBorrar = cnConnection.prepareStatement("DELETE FROM public.amigo WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
+            Connection cnConnection = c.conexion();
+        	PreparedStatement psBorrar = cnConnection.prepareStatement("DELETE FROM public.amigo WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
             psBorrar.setString(1, usuario);
             psBorrar.setString(2, amigo);
             psBorrar.setString(3, amigo);
@@ -189,10 +193,9 @@ public class DatosBBDD {
      * @return Devuelve True si existe y false en caso contrario
      */
     public boolean existeConversacion(String usuario, String usuarioString) {
-        Connection cnConnection = c.conexion();
 
         try {
-
+            Connection cnConnection = c.conexion();
             PreparedStatement psExisteConver = cnConnection.prepareStatement("SELECT count(*) FROM conversacion WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
             psExisteConver.setString(1, usuario);
             psExisteConver.setString(2, usuarioString);
@@ -218,9 +221,9 @@ public class DatosBBDD {
      * @param usuarioString Amigo del usuario
      */
     public void crearConversacion(String usuario, String usuarioString) {
-        Connection cnConnection = c.conexion();
 
         try {
+            Connection cnConnection = c.conexion();
             PreparedStatement psCrearConver = cnConnection.prepareStatement("INSERT INTO public.conversacion(usuario1, usuario2) VALUES (?, ?);");
             psCrearConver.setString(1, usuario);
             psCrearConver.setString(2, usuarioString);
@@ -242,9 +245,8 @@ public class DatosBBDD {
      */
     public String[][] cargarMensajesConver(String usuario, String usuarioString) {
 
-        Connection cnConnection = c.conexion();
         try {
-
+            Connection cnConnection = c.conexion();
             PreparedStatement psIDConversacion = cnConnection.prepareStatement("SELECT id_conversacion FROM conversacion WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
             psIDConversacion.setString(1, usuario);
             psIDConversacion.setString(2, usuarioString);
@@ -292,9 +294,9 @@ public class DatosBBDD {
      * @param amigo Amigo de la conversación
      */
     public void enviarMensajeConver(String usuario, String text, String amigo) {
-        Connection cnConnection = c.conexion();
 
         try {
+            Connection cnConnection = c.conexion();
             cnConnection.setAutoCommit(false);
             PreparedStatement psCrearMensaje = cnConnection.prepareStatement("INSERT INTO public.mensaje(texto) VALUES (?);");
             psCrearMensaje.setString(1, text);
@@ -326,8 +328,8 @@ public class DatosBBDD {
      * @param amigo Amigo del usuario
      */
     public void borrarConversacion(String usuario, String amigo) {
-        Connection cnConnection = c.conexion();
         try {
+            Connection cnConnection = c.conexion();
             PreparedStatement psIDConversacion = cnConnection.prepareStatement("SELECT id_conversacion FROM conversacion WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
             psIDConversacion.setString(1, usuario);
             psIDConversacion.setString(2, amigo);
@@ -353,8 +355,8 @@ public class DatosBBDD {
      */
     public void borrarMensajes(String usuario, String amigo) {
 
-        Connection cnConnection = c.conexion();
         try {
+            Connection cnConnection = c.conexion();
             PreparedStatement psIDConversacion = cnConnection.prepareStatement("SELECT id_conversacion FROM conversacion WHERE (usuario1 = ? AND usuario2= ?) OR  (usuario1 = ? AND usuario2= ?);");
             psIDConversacion.setString(1, usuario);
             psIDConversacion.setString(2, amigo);
@@ -387,9 +389,8 @@ public class DatosBBDD {
      */
     public String[][] ObtenerGrupos(String Usuario) {
 
-        Connection cnConnection = c.conexion();
         try {
-
+            Connection cnConnection = c.conexion();
             PreparedStatement psCantidadGrupos = cnConnection.prepareStatement("SELECT count(*) FROM usuariogrupo WHERE usuario=?;");
             psCantidadGrupos.setString(1, Usuario);
             ResultSet rsCantidadGrupos = psCantidadGrupos.executeQuery();
@@ -428,9 +429,9 @@ public class DatosBBDD {
      * @return Array con los mensajes del grupo y quién los ha enviado
      */
     public String[][] cargarMensajesGrupo(int id) {
-        Connection cnConnection = c.conexion();
+        
         try {
-
+            Connection cnConnection = c.conexion();
             PreparedStatement psCantidadMensajes = cnConnection.prepareStatement("SELECT count(*) FROM mensaje_grupo_usuario WHERE id_grupo=?;");
             psCantidadMensajes.setInt(1, id);
             ResultSet rsCantidadMensajes = psCantidadMensajes.executeQuery();
@@ -469,9 +470,10 @@ public class DatosBBDD {
      * @param id Identificador del grupo
      */
     public void enviarMensajeGrupo(String usuario, String text, int id) {
-        Connection cnConnection = c.conexion();
+        
 
         try {
+            Connection cnConnection = c.conexion();
             cnConnection.setAutoCommit(false);
             PreparedStatement psCrearMensaje = cnConnection.prepareStatement("INSERT INTO public.mensaje(texto) VALUES (?);");
             psCrearMensaje.setString(1, text);
@@ -495,8 +497,9 @@ public class DatosBBDD {
      * @param grupoActual Grupo que se va a borrar
      */
     public void borrarGrupo(int grupoActual) {
-        Connection cnConnection = c.conexion();
+        
         try {
+            Connection cnConnection = c.conexion();
             PreparedStatement psBorrarGrupo = cnConnection.prepareStatement("SELECT borrargrupo(?);");
             psBorrarGrupo.setInt(1, grupoActual);
             psBorrarGrupo.executeQuery();
@@ -515,9 +518,10 @@ public class DatosBBDD {
      * @return Devuelve true en caso de que sí lo sea y false en caso contrario
      */
     public boolean esAdmin(String usuario, int grupoActual) {
-        Connection cnConnection = c.conexion();
+        
 
         try {
+            Connection cnConnection = c.conexion();
             PreparedStatement psesAdmin = cnConnection.prepareStatement("SELECT administra FROM usuariogrupo WHERE usuario=? AND id_grupo=?;");
             psesAdmin.setString(1, usuario);
             psesAdmin.setInt(2, grupoActual);
@@ -539,10 +543,10 @@ public class DatosBBDD {
      * @return Devuelve un array list con los usuarios del grupo
      */
     public ArrayList<String> cargarUsuariosGrupo(int grupoActual) {
-        Connection cnConnection = c.conexion();
         ArrayList<String> personasGrupo = new ArrayList<>();
 
         try {
+            Connection cnConnection = c.conexion();
             PreparedStatement psUsuariosGrupo = cnConnection.prepareStatement("SELECT usuario FROM usuariogrupo WHERE id_grupo=?;");
             psUsuariosGrupo.setInt(1, grupoActual);
             ResultSet rsUsuariosGrupo = psUsuariosGrupo.executeQuery();
@@ -587,8 +591,8 @@ public class DatosBBDD {
      * @param nombreGrupo Nombre del grupo que se va a crear
      */
     public void anyadirGrupo(String usuarioActual, String nombreGrupo) {
-        Connection cnConnection = c.conexion();
         try {
+            Connection cnConnection = c.conexion();
             cnConnection.setAutoCommit(false);
             PreparedStatement psCrearGrupo = cnConnection.prepareStatement("INSERT INTO public.grupo(nombre_grupo) VALUES (?);");
             psCrearGrupo.setString(1, nombreGrupo);
@@ -614,8 +618,8 @@ public class DatosBBDD {
      * o no
      */
     public void anyadirAGrupo(int id, String usuario, boolean administra) {
-        Connection cnConnection = c.conexion();
         try {
+            Connection cnConnection = c.conexion();
             PreparedStatement psAnyadirUsuario = cnConnection.prepareStatement("INSERT INTO public.usuariogrupo(usuario,id_grupo,administra) VALUES (?,?,?);");
             psAnyadirUsuario.setString(1, usuario);
             psAnyadirUsuario.setInt(2, id);
